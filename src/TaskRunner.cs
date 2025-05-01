@@ -77,6 +77,27 @@
         }
 
         /// <summary>
+        /// Adds a synchronous action to the runner. The action is executed on a separate thread.
+        /// </summary>
+        /// <param name="action">The action to execute.</param>
+        public void Add(Action action)
+        {
+            ArgumentNullException.ThrowIfNull(action);
+            Add(Task.Run(action));
+        }
+
+        /// <summary>
+        /// Adds a synchronous function that returns a value to the runner. The function is executed on a separate thread.
+        /// </summary>
+        /// <typeparam name="T">The type of the result returned by the function.</typeparam>
+        /// <param name="func">A function that returns a result of type T.</param>
+        public void Add<T>(Func<T> func)
+        {
+            ArgumentNullException.ThrowIfNull(func);
+            Add(Task.Run(() => func()));
+        }
+
+        /// <summary>
         /// Executes all added tasks asynchronously.
         /// </summary>
         public async Task RunAsync(CancellationToken cancellationToken = default)

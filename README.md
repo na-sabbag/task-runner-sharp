@@ -36,9 +36,9 @@ using TaskRunnerSharp;
 var runner = new TaskRunner();
 
 // Add tasks
-runner.Add(Task.Run(() => Console.WriteLine("Running Task 1")));
-runner.Add(Task.Run(() => 123));
-runner.Add(Task.Run(() => "Hello TaskRunnerSharp!"));
+runner.Add(() => Console.WriteLine("Running Action 1"));
+runner.Add(() => 123);
+runner.Add(() => "Hello TaskRunnerSharp!");
 
 // Run all tasks
 runner.Run(); // or await runner.RunAsync();
@@ -63,6 +63,8 @@ runner.Clear();
 
 | Method / Property | Description |
 |:------------------|:------------|
+| `Add(Action)` | Adds an action. |
+| `Add<T>(Func<T>)` | Adds a func (returns a value). |
 | `Add(Task)` | Adds a non-returning task. |
 | `Add<T>(Task<T>)` | Adds a typed task that returns a value. |
 | `Run()` | Runs all tasks synchronously. |
