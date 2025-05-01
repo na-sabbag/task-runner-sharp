@@ -3,12 +3,13 @@
     /// <summary>
     /// Utility class to manage and run multiple asynchronous tasks.
     /// </summary>
-    public sealed class TaskRunner
+    public sealed class TaskRunner : ITaskRunner
     {
         private readonly List<Task> _tasks = [];
         private readonly List<Task<object?>> _typedTasks = [];
         private readonly object _lock = new();
         private readonly List<string> _taskLogs = [];
+        private List<object?>? _cachedResults = null;
 
         /// <summary>
         /// Retrieves the results of all typed tasks as objects.
@@ -19,13 +20,16 @@
             {
                 lock (_lock)
                 {
-                    var list = new List<object?>();
+                    if (_cachedResults is not null)
+                        return _cachedResults;
+
+                    _cachedResults = [];
                     foreach (var task in _typedTasks)
                     {
                         if (task.IsCompletedSuccessfully)
-                            list.Add(task.Result);
+                            _cachedResults.Add(task.Result);
                     }
-                    return list;
+                    return _cachedResults;
                 }
             }
         }
